@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Movie } from './Models/movie';
-import { DataService } from './Service/data.service';
-import { addMovies, getMovies } from './Store/Actions/movie.action';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Movie} from './Models/movie';
+import {DataService} from './Service/data.service';
+import {addMovies, assignUser, getMovies} from './Store/Actions/movie.action';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +10,12 @@ import { addMovies, getMovies } from './Store/Actions/movie.action';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  movies: Movie[] = [];
+  // movies: Movie[] = [];
   newMovie: Movie = new Movie();
   title = 'movieApp';
-  constructor(private dataService: DataService, private store: Store) {}
+
+  constructor(private dataService: DataService, private store: Store) {
+  }
 
   ngOnInit(): void {
     this.getAllMovies();
@@ -21,16 +23,22 @@ export class AppComponent implements OnInit {
 
   getAllMovies(): void {
     this.store.dispatch(getMovies());
-    this.dataService.getMovies().subscribe((movies: Movie[]) => {
-      this.movies = movies;
-    });
+    this.store.dispatch(assignUser('Deepak'));
+    // this.dataService.getMovies().subscribe((movies: Movie[]) => {
+    //   this.movies = movies;
+    // });
   }
 
   addNewMovies(): void {
     this.store.dispatch(addMovies(this.newMovie));
-    this.dataService.addMovies(this.newMovie).subscribe((res) => {
-      this.getAllMovies();
-      this.newMovie = new Movie();
-    });
+    this.newMovie = new Movie();
+    // this.dataService.addMovies(this.newMovie).subscribe((res) => {
+    //   this.getAllMovies();
+    //   this.newMovie = new Movie();
+    // });
+  }
+
+  changeUser(): void {
+    this.store.dispatch(assignUser('Vishal'));
   }
 }
